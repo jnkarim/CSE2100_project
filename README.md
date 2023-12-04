@@ -1,6 +1,6 @@
 # assignment130
 
-A new Flutter project.
+A Flutter app for buying books.
 
 ## Getting Started
 
