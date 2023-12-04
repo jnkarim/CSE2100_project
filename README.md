@@ -1,4 +1,4 @@
-# assignment130
+# CSE2100 project
 
 A Flutter app for buying books.
 
