@@ -46,3 +46,185 @@ class BookListPage extends StatelessWidget {
     );
   }
 }
+
+class BookCard extends StatelessWidget {
+  final String bookName;
+  final String authorName;
+  final double rating;
+  final String imagePath;
+  final String shortDescription;
+  final String price;
+
+  const BookCard({
+    required this.bookName,
+    required this.authorName,
+    required this.rating,
+    required this.imagePath,
+    required this.shortDescription,
+    required this.price,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 80,
+                height: 150,
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(bookName, style: TextStyle(fontSize: 16)),
+                      SizedBox(height: 5),
+                      Text(authorName),
+                      SizedBox(height: 5),
+                      Text('Rating: $rating'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          ElevatedButton.icon(
+            onPressed: () {
+              // Navigate to Buy Now page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BuyNowPage(
+                      bookName, imagePath, authorName, shortDescription, price),
+                ),
+              );
+            },
+            icon: Icon(Icons.shopping_cart),
+            label: Text('Buy Now'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BuyNowPage extends StatefulWidget {
+  final String bookName;
+  final String imagePath;
+  final String authorName;
+  final String shortDescription;
+  final String price;
+
+  const BuyNowPage(this.bookName, this.imagePath, this.authorName,
+      this.shortDescription, this.price);
+
+  @override
+  _BuyNowPageState createState() => _BuyNowPageState();
+}
+
+class _BuyNowPageState extends State<BuyNowPage> {
+  int selectedQuantity = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 207, 240, 237),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text('Buy Now'),
+        backgroundColor: Color.fromARGB(255, 117, 172, 175),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.bookName,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Image.asset(
+                  widget.imagePath,
+                  width: 150,
+                  height: 250,
+                  fit: BoxFit.cover,
+                ),
+                SizedBox(height: 10),
+                Text('Author: ${widget.authorName}'),
+                SizedBox(height: 10),
+                Text('Description: ${widget.shortDescription}'),
+                SizedBox(height: 10),
+                Text(
+                  'Price: TK. ${widget.price}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 151, 97, 49),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Quantity: '),
+                    DropdownButton<int>(
+                      value: selectedQuantity,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedQuantity = value!;
+                        });
+                      },
+                      items: List.generate(5, (index) => index + 1)
+                          .map((value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(value.toString()),
+                              ))
+                          .toList(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Implement Buy Now functionality
+                    // You can access selectedQuantity here
+                    print('Selected Quantity: $selectedQuantity');
+
+                    // Show a SnackBar when Buy Now is pressed
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Your book is purchased!'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  child: Text('Buy Now'),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate back to the first page
+                    Navigator.pop(context);
+                  },
+                  child: Text('Go Back'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
